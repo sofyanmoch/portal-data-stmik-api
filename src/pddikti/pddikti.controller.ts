@@ -3,7 +3,7 @@ import { PddiktiService } from './pddikti.service';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { IBaseResponse } from './interface/pddikti.interface';
+import { IBaseResponse, IDashboardDosenResponse, IDetailProdi } from './interface/pddikti.interface';
 
 @ApiTags('pddikti')
 @Controller('pddikti')
@@ -22,7 +22,7 @@ export class PddiktiController {
 
     @Get('/prodi/:id')
     @ApiParam({ name: 'id', type: String, description: 'Id Prodi - Get from list prodi' })
-    getDetailProdi(@Param('id') id: string): Promise<IBaseResponse> {
+    getDetailProdi(@Param('id') id: string): Promise<IDetailProdi> {
         return this.pddiktiService.getDetailProdi(id);
     }
 
@@ -32,4 +32,13 @@ export class PddiktiController {
         return this.pddiktiService.getDetailDosen(id_reg);
     }
 
+    @Get('/grouping-dosen')
+    getDataGroupingDosen(): Promise<IBaseResponse> {
+        return this.pddiktiService.getDataGroupingDosen();
+    }
+
+    @Get('/dashboard-dosen')
+    getDaashboardDosen(): Promise<IDashboardDosenResponse> {
+        return this.pddiktiService.getDashboardDosen();
+    }
 }

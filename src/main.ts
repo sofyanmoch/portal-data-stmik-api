@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const PORT = 3001;
 
   const config = new DocumentBuilder()
     .setTitle('API Portal Data')
@@ -14,6 +15,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(3001);
+  app.enableCors();
+  await app.listen(PORT || 3001);
+
+  console.log(' === App running on port ' + PORT + ' === ')
 }
 bootstrap();
