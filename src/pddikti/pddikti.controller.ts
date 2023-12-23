@@ -3,7 +3,7 @@ import { PddiktiService } from './pddikti.service';
 import { Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { IBaseResponse, IDashboardDosenResponse, IDetailProdi } from './interface/pddikti.interface';
+import { IBaseResponse, IDashboardDosenResponse, IDashboardMahasiswaResponse, IDetailProdi } from './interface/pddikti.interface';
 
 @ApiTags('pddikti')
 @Controller('pddikti')
@@ -40,5 +40,10 @@ export class PddiktiController {
     @Get('/dashboard-dosen')
     getDaashboardDosen(): Promise<IDashboardDosenResponse> {
         return this.pddiktiService.getDashboardDosen();
+    }
+
+    @Get('/dashboard-mahasiswa')
+    getDashboardMahasiswa(): Promise<IDashboardMahasiswaResponse> {
+        return this.pddiktiService.getDashboardMahasiswa();
     }
 }

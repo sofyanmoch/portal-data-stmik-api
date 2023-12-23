@@ -5,6 +5,7 @@ import { Observable, catchError, firstValueFrom } from 'rxjs';
 import {
   IBaseResponse,
   IDashboardDosenResponse,
+  IDashboardMahasiswaResponse,
   IDetailProdi,
 } from './interface/pddikti.interface';
 
@@ -126,19 +127,12 @@ export class PddiktiService {
 
     const jenjangDosen = this.getResultJenjangDosen(response.data);
     const jabatanDosen = this.getResultJabatanDosen(response.data);
-    const dataMahasiswa = await this.getListProdi();
-
-    const prodiMahasiswa = {
-      si: dataMahasiswa.data[0].rasio_list[0].mahasiswa,
-      ti: dataMahasiswa.data[1].rasio_list[0].mahasiswa,
-    };
 
     const result = {
       totalDosen,
       byJenisKelamin,
       jenjangDosen,
-      jabatanDosen,
-      prodiMahasiswa,
+      jabatanDosen
     };
 
     return {
@@ -146,6 +140,22 @@ export class PddiktiService {
       status: response?.status,
       message: response?.statusText,
     };
+  }
+
+  async getDashboardMahasiswa(): Promise<IDashboardMahasiswaResponse> {
+    const dataMahasiswa = await this.getListProdi();
+
+    const totalByProdi = {
+      SI: dataMahasiswa.data[0].rasio_list[0].mahasiswa as number,
+      TI: dataMahasiswa.data[1].rasio_list[0].mahasiswa as number,
+    };
+
+    const result = {
+      totalMahasiswa: dataMahasiswa.data[0].rasio_list[0].mahasiswa + dataMahasiswa.data[1].rasio_list[0].mahasiswa as number,
+      totalByProdi
+    };
+
+    return { data: result, status: 200, message: 'OK' }
   }
 
   getResultJenjangDosen(data: any) {
