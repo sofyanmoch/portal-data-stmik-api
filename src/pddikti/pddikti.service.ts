@@ -96,6 +96,40 @@ export class PddiktiService {
     };
   }
 
+  async getListDosenTI(): Promise<any> {
+    const apiUrl = 'https://api-frontend.kemdikbud.go.id/detail_prodi/M0IwNkM4NkQtM0I0Ny00RTdCLUFDNEMtOUU3ODcxRkJCNkIx/20231'
+    const response = await firstValueFrom(
+      this.httpService.get(apiUrl).pipe(
+        catchError((error: AxiosError) => {
+          throw 'Happened unknown error!';
+        }),
+      ),
+    );
+
+    return {
+      data: response?.data?.datadosen,
+      status: response?.status,
+      message: response?.statusText,
+    };
+  }
+
+  async getListDosenSI(): Promise<any> {
+    const apiUrl = 'https://api-frontend.kemdikbud.go.id/detail_prodi/Qjc5Rjc3QUMtREU3My00QTY1LUI3NkEtRjU3NjY3QjQyNUQ5/20231'
+    const response = await firstValueFrom(
+      this.httpService.get(apiUrl).pipe(
+        catchError((error: AxiosError) => {
+          throw 'Happened unknown error!';
+        }),
+      ),
+    );
+
+    return {
+      data: response?.data?.datadosen,
+      status: response?.status,
+      message: response?.statusText,
+    };
+  }
+
   async getDashboardDosen(): Promise<IDashboardDosenResponse> {
     const apiUrl =
       'https://api-frontend.kemdikbud.go.id/v2/detail_pt_dosen/MkY2OURCQzYtNzA2QS00OEFGLUJFMUMtNDM1QTVBRUVFMDBB';

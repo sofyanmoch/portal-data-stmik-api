@@ -46,4 +46,14 @@ export class PddiktiController {
     getDashboardMahasiswa(): Promise<IDashboardMahasiswaResponse> {
         return this.pddiktiService.getDashboardMahasiswa();
     }
+
+    @Get('/list-dosen-ti')
+    getListDosenTI(): Promise<IBaseResponse> {
+        return this.pddiktiService.getListDosenTI()
+    }
+
+    @Get('/list-dosen-si')
+    getListDosenSI(): Promise<IBaseResponse> {
+        return this.pddiktiService.getListDosenSI()
+    }
 }
