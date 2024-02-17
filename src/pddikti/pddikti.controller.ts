@@ -27,9 +27,9 @@ export class PddiktiController {
     }
 
     @Get('/dosen/:id')
-    @ApiParam({ name: 'id_reg', type: String, description: 'Id Reg Dosen - Get from detail prodi' })
-    getDetailDosen(@Param('id_reg') id_reg: string): Promise<IBaseResponse> {
-        return this.pddiktiService.getDetailDosen(id_reg);
+    @ApiParam({ name: 'id', type: String, description: 'Id Dosen' })
+    getDetailDosen(@Param('id') id: string): Promise<IBaseResponse> {
+        return this.pddiktiService.getDetailDosen(id);
     }
 
     @Get('/grouping-dosen')

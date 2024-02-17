@@ -80,8 +80,8 @@ export class PddiktiService {
     };
   }
 
-  async getDetailDosen(id_reg: string): Promise<IBaseResponse> {
-    const apiUrl = `https://api-frontend.kemdikbud.go.id/detail_dosen/${id_reg}`;
+  async getDetailDosen(id: string): Promise<IBaseResponse> {
+    const apiUrl = `https://api-frontend.kemdikbud.go.id/detail_dosen/${id}`;
     const response = await firstValueFrom(
       this.httpService.get(apiUrl).pipe(
         catchError((error: AxiosError) => {
