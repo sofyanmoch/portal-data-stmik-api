@@ -8,43 +8,47 @@ import {
   IDashboardMahasiswaResponse,
   IDetailProdi,
 } from './interface/pddikti.interface';
+import * as fs from 'fs';
+import { FileNameShared } from 'shared/file/enum.file';
+
+const jsonLocation: string = 'shared/json/';
 
 @Injectable()
 export class PddiktiService {
   constructor(private readonly httpService: HttpService) {}
 
   async getProfile(): Promise<IBaseResponse> {
-    const apiUrl =
-      'https://api-frontend.kemdikbud.go.id/v2/detail_pt/MkY2OURCQzYtNzA2QS00OEFGLUJFMUMtNDM1QTVBRUVFMDBB';
-    const response = await firstValueFrom(
-      this.httpService.get(apiUrl).pipe(
-        catchError((error: AxiosError) => {
-          throw 'Happened unknown error!';
-        }),
-      ),
-    );
-    return {
-      data: response?.data,
-      status: response?.status,
-      message: response?.statusText,
-    };
+    try {
+      const rawData = fs.readFileSync(
+        jsonLocation + FileNameShared.PROFILE_NAME,
+        'utf-8',
+      );
+      const profile = JSON.parse(rawData);
+      return {
+        data: profile,
+        status: 200,
+        message: 'OK',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getListProdi(): Promise<IBaseResponse> {
-    const apiUrl =
-      'https://api-frontend.kemdikbud.go.id/v2/detail_pt_prodi/MkY2OURCQzYtNzA2QS00OEFGLUJFMUMtNDM1QTVBRUVFMDBB';
-    const response = await firstValueFrom(
-      this.httpService.get(apiUrl).pipe(
-        catchError((error: AxiosError) => {
-          throw 'Happened unknown error!';
-        }),
-      ),
-    );
-    return {
-      data: response?.data,
-      status: response?.status,
-      message: response?.statusText,
-    };
+    try {
+      const rawData = fs.readFileSync(
+        jsonLocation + FileNameShared.LIST_PRODI_NAME,
+        'utf-8',
+      );
+      const profile = JSON.parse(rawData);
+      return {
+        data: profile,
+        status: 200,
+        message: 'OK',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getDetailProdi(id: string): Promise<IDetailProdi> {
@@ -97,7 +101,8 @@ export class PddiktiService {
   }
 
   async getListDosenTI(): Promise<any> {
-    const apiUrl = 'https://api-frontend.kemdikbud.go.id/detail_prodi/M0IwNkM4NkQtM0I0Ny00RTdCLUFDNEMtOUU3ODcxRkJCNkIx/20231'
+    const apiUrl =
+      'https://api-frontend.kemdikbud.go.id/detail_prodi/M0IwNkM4NkQtM0I0Ny00RTdCLUFDNEMtOUU3ODcxRkJCNkIx/20231';
     const response = await firstValueFrom(
       this.httpService.get(apiUrl).pipe(
         catchError((error: AxiosError) => {
@@ -114,7 +119,8 @@ export class PddiktiService {
   }
 
   async getListDosenSI(): Promise<any> {
-    const apiUrl = 'https://api-frontend.kemdikbud.go.id/detail_prodi/Qjc5Rjc3QUMtREU3My00QTY1LUI3NkEtRjU3NjY3QjQyNUQ5/20231'
+    const apiUrl =
+      'https://api-frontend.kemdikbud.go.id/detail_prodi/Qjc5Rjc3QUMtREU3My00QTY1LUI3NkEtRjU3NjY3QjQyNUQ5/20231';
     const response = await firstValueFrom(
       this.httpService.get(apiUrl).pipe(
         catchError((error: AxiosError) => {
@@ -131,49 +137,48 @@ export class PddiktiService {
   }
 
   async getDashboardDosen(): Promise<IDashboardDosenResponse> {
-    const apiUrl =
-      'https://api-frontend.kemdikbud.go.id/v2/detail_pt_dosen/MkY2OURCQzYtNzA2QS00OEFGLUJFMUMtNDM1QTVBRUVFMDBB';
-    const response = await firstValueFrom(
-      this.httpService.get(apiUrl).pipe(
-        catchError((error: AxiosError) => {
-          throw 'Happened unknown error!';
-        }),
-      ),
-    );
-
-    const totalDosen =
-      response.data.tetap.jumlah_dosen_jabatan.series.reduce(
-        (total, { data }) => total + data[0],
-        0,
-      ) +
-      response.data.tidak_tetap.jumlah_dosen_jabatan.series.reduce(
-        (total, { data }) => total + data[0],
-        0,
+    try {
+      const rawData = fs.readFileSync(
+        jsonLocation + FileNameShared.SUMMARY_DOSEN_NAME,
+        'utf-8',
       );
-    const byJenisKelamin = {
-      lakiLaki:
-        response.data.tetap.jumlah_dosen_jenis_kelamin.L +
-        response.data.tidak_tetap.jumlah_dosen_jenis_kelamin.L,
-      perempuan:
-        response.data.tetap.jumlah_dosen_jenis_kelamin.P +
-        response.data.tidak_tetap.jumlah_dosen_jenis_kelamin.P,
-    };
+      const response = JSON.parse(rawData);
+      const totalDosen =
+        response.tetap.jumlah_dosen_jabatan.series.reduce(
+          (total, { data }) => total + data[0],
+          0,
+        ) +
+        response.tidak_tetap.jumlah_dosen_jabatan.series.reduce(
+          (total, { data }) => total + data[0],
+          0,
+        );
+      const byJenisKelamin = {
+        lakiLaki:
+          response.tetap.jumlah_dosen_jenis_kelamin.L +
+          response.tidak_tetap.jumlah_dosen_jenis_kelamin.L,
+        perempuan:
+          response.tetap.jumlah_dosen_jenis_kelamin.P +
+          response.tidak_tetap.jumlah_dosen_jenis_kelamin.P,
+      };
 
-    const jenjangDosen = this.getResultJenjangDosen(response.data);
-    const jabatanDosen = this.getResultJabatanDosen(response.data);
+      const jenjangDosen = this.getResultJenjangDosen(response);
+      const jabatanDosen = this.getResultJabatanDosen(response);
 
-    const result = {
-      totalDosen,
-      byJenisKelamin,
-      jenjangDosen,
-      jabatanDosen
-    };
+      const result = {
+        totalDosen,
+        byJenisKelamin,
+        jenjangDosen,
+        jabatanDosen,
+      };
 
-    return {
-      data: result,
-      status: response?.status,
-      message: response?.statusText,
-    };
+      return {
+        data: result,
+        status: response?.status,
+        message: response?.statusText,
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getDashboardMahasiswa(): Promise<IDashboardMahasiswaResponse> {
@@ -185,11 +190,12 @@ export class PddiktiService {
     };
 
     const result = {
-      totalMahasiswa: dataMahasiswa.data[0].rasio_list[0].mahasiswa + dataMahasiswa.data[1].rasio_list[0].mahasiswa as number,
-      totalByProdi
+      totalMahasiswa: (dataMahasiswa.data[0].rasio_list[0].mahasiswa +
+        dataMahasiswa.data[1].rasio_list[0].mahasiswa) as number,
+      totalByProdi,
     };
 
-    return { data: result, status: 200, message: 'OK' }
+    return { data: result, status: 200, message: 'OK' };
   }
 
   getResultJenjangDosen(data: any) {
