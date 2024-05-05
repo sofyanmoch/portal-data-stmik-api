@@ -19,6 +19,10 @@ export class DataService {
         return this.getListProdi();
       case TypeGetData.SUMMARY_DOSEN:
         return this.getSummaryDosen();
+      case TypeGetData.DOSEN_TI:
+        return this.getListDosenTi();
+      case TypeGetData.DOSEN_SI:
+        return this.getListDosenSi();
       default:
         throw new Error('Type tidak valid');
     }
@@ -78,6 +82,42 @@ export class DataService {
     };
   }
 
+  async getListDosenTi(): Promise<IBaseResponse> {
+    const apiUrl =
+      'https://api-frontend.kemdikbud.go.id/detail_prodi/M0IwNkM4NkQtM0I0Ny00RTdCLUFDNEMtOUU3ODcxRkJCNkIx/20231';
+    const response = await firstValueFrom(
+      this.httpService.get(apiUrl).pipe(
+        catchError((error: AxiosError) => {
+          throw 'Happened unknown error!';
+        }),
+      ),
+    );
+    this.saveData(TypeGetData.DOSEN_TI, response.data);
+    return {
+      data: response?.data,
+      status: response?.status,
+      message: response?.statusText,
+    };
+  }
+
+  async getListDosenSi(): Promise<IBaseResponse> {
+    const apiUrl =
+      'https://api-frontend.kemdikbud.go.id/detail_prodi/Qjc5Rjc3QUMtREU3My00QTY1LUI3NkEtRjU3NjY3QjQyNUQ5/20231';
+    const response = await firstValueFrom(
+      this.httpService.get(apiUrl).pipe(
+        catchError((error: AxiosError) => {
+          throw 'Happened unknown error!';
+        }),
+      ),
+    );
+    this.saveData(TypeGetData.DOSEN_SI, response.data);
+    return {
+      data: response?.data,
+      status: response?.status,
+      message: response?.statusText,
+    };
+  }
+
   async saveData(type: TypeGetData, body: string) {
     let nameFile: string = '';
     switch (type) {
@@ -89,6 +129,12 @@ export class DataService {
         break;
       case TypeGetData.SUMMARY_DOSEN:
         nameFile = FileNameShared.SUMMARY_DOSEN_NAME;
+        break;
+      case TypeGetData.DOSEN_TI:
+        nameFile = FileNameShared.DOSEN_TI_NAME;
+        break;
+      case TypeGetData.DOSEN_SI:
+        nameFile = FileNameShared.DOSEN_SI_NAME;
         break;
     }
     try {

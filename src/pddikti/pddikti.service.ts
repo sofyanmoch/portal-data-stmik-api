@@ -101,39 +101,37 @@ export class PddiktiService {
   }
 
   async getListDosenTI(): Promise<any> {
-    const apiUrl =
-      'https://api-frontend.kemdikbud.go.id/detail_prodi/M0IwNkM4NkQtM0I0Ny00RTdCLUFDNEMtOUU3ODcxRkJCNkIx/20231';
-    const response = await firstValueFrom(
-      this.httpService.get(apiUrl).pipe(
-        catchError((error: AxiosError) => {
-          throw 'Happened unknown error!';
-        }),
-      ),
-    );
-
-    return {
-      data: response?.data?.datadosen,
-      status: response?.status,
-      message: response?.statusText,
-    };
+    try {
+      const rawData = fs.readFileSync(
+        jsonLocation + FileNameShared.DOSEN_TI_NAME,
+        'utf-8',
+      );
+      const profile = JSON.parse(rawData);
+      return {
+        data: profile,
+        status: 200,
+        message: 'OK',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getListDosenSI(): Promise<any> {
-    const apiUrl =
-      'https://api-frontend.kemdikbud.go.id/detail_prodi/Qjc5Rjc3QUMtREU3My00QTY1LUI3NkEtRjU3NjY3QjQyNUQ5/20231';
-    const response = await firstValueFrom(
-      this.httpService.get(apiUrl).pipe(
-        catchError((error: AxiosError) => {
-          throw 'Happened unknown error!';
-        }),
-      ),
-    );
-
-    return {
-      data: response?.data?.datadosen,
-      status: response?.status,
-      message: response?.statusText,
-    };
+    try {
+      const rawData = fs.readFileSync(
+        jsonLocation + FileNameShared.DOSEN_SI_NAME,
+        'utf-8',
+      );
+      const profile = JSON.parse(rawData);
+      return {
+        data: profile,
+        status: 200,
+        message: 'OK',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getDashboardDosen(): Promise<IDashboardDosenResponse> {
